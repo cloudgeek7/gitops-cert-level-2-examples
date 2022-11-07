@@ -18,18 +18,29 @@ spec:
 #              selector:
 #                matchLabels:
 #                  argocd.argoproj.io/secret-type: cluster
-  template:
-    metadata:
-      name: '{{path.basename}}-{{name}}'
-    spec:
-      project: '{{metadata.labels.environment}}'
-      source:
-        repoURL: https://github.com/codefresh-contrib/gitops-cert-level-2-examples.git
-        targetRevision: HEAD
-        path: '{{path}}'
-      destination:
-        server: '{{server}}'
-        namespace: '{{path.basename}}'
+#  template:
+#    metadata:
+#      name: '{{path.basename}}-{{name}}'
+#    spec:
+#      project: '{{metadata.labels.environment}}'
+#      source:
+#        repoURL: https://github.com/codefresh-contrib/gitops-cert-level-2-examples.git
+#        targetRevision: HEAD
+#        path: '{{path}}'
+#      destination:
+#        server: '{{server}}'
+#        namespace: '{{path.basename}}'
+
+  # Source of the application manifests
+  source:
+    repoURL: https://github.com/codefresh-contrib/gitops-cert-level-2-examples.git
+    targetRevision: HEAD
+    path: application-sets/example-apps/*
+   
+  # Destination cluster and namespace to deploy the application
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
 
   # Sync policy
   syncPolicy:
@@ -39,3 +50,4 @@ spec:
       prune: true # Specifies if resources should be pruned during auto-syncing ( false by default ).
       selfHeal: true # Specifies if partial app sync should be executed when resources are changed only in target Kubernetes cluster and no git change detected ( false by default ).
   
+
